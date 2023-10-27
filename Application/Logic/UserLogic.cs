@@ -31,7 +31,43 @@ public class UserLogic : IUserLogic
     
         return created;
     }
-    
+
+    public Task<IEnumerable<User>> GetAsync(SearchUserParametersDTO searchParameters)
+    {
+        return UserDAO.GetAsync(searchParameters);
+    }
+
+    public async Task UpdateAsync(UserUpdateDTO userToUpdate)
+    {
+        User? existing = UserDAO.GetByIdAsync(userToUpdate.Id).Result;
+        if (existing == null)
+            throw new Exception($"User with ID {userToUpdate.Id} not found!");
+        
+        // Patchwork solution to prevent duplicate usernames
+        // Should be a combined with .GetByIdAsync() to create a private method for checking both.
+        // Problem has arisen due to me wanting both a unique username and a unique ID. 
+        User? existingUsername = await UserDAO.GetByUsernameAsync(userToUpdate.UserName);
+        if (existingUsername != null)
+            throw new Exception("Username already taken!");
+        // --------------------------------------------------
+        
+        string userNameToUse = userToUpdate.UserName ?? existing.UserName;
+        string passwordToUse = userToUpdate.Password ?? existing.Password;
+
+        // This is a makeshift solution, making sure user data is still following the rules
+        UserCreationDTO validateUpdated = new UserCreationDTO(userNameToUse, passwordToUse);
+        ValidateData(validateUpdated);
+        
+        User updated = new User
+        {
+            Id = userToUpdate.Id,
+            UserName = userNameToUse,
+            Password = passwordToUse,
+        };
+        
+        await UserDAO.UpdateAsync(updated);
+    }
+
     private static void ValidateData(UserCreationDTO userToCreate)
     {
         string userName = userToCreate.UserName;
@@ -50,7 +86,7 @@ public class UserLogic : IUserLogic
             throw new Exception("Username cannot be admin!");
         
         // Temporary solution to prevent null passwords
-        if (password.Length < 8)
-            throw new Exception("Password must be at least 8 characters!");
+        if (password.Length < 4)
+            throw new Exception("Password must be at least 4 characters!");
     }
 }
