@@ -7,16 +7,16 @@ namespace Application.Logic;
 
 public class UserLogic : IUserLogic
 {
-    private readonly IUserDAO UserDAO;
+    private readonly IUserDAO _userDao;
     
     public UserLogic (IUserDAO userDAO)
     {
-        this.UserDAO = userDAO;
+        _userDao = userDAO;
     }
     
     public async Task<User> CreateAsync(UserCreationDTO userToCreate)
     {
-        User? existing = await UserDAO.GetByUsernameAsync(userToCreate.UserName);
+        User? existing = await _userDao.GetByUsernameAsync(userToCreate.UserName);
         if (existing != null)
             throw new Exception("Username already taken!");
 
@@ -27,26 +27,26 @@ public class UserLogic : IUserLogic
             Password = userToCreate.Password
         };
     
-        User created = await UserDAO.CreateAsync(toCreate);
+        User created = await _userDao.CreateAsync(toCreate);
     
         return created;
     }
 
-    public Task<IEnumerable<User>> GetAsync(SearchUserParametersDTO searchParameters)
+    public Task<IEnumerable<User>> GetAsync(UserSearchParametersDTO userSearchParameters)
     {
-        return UserDAO.GetAsync(searchParameters);
+        return _userDao.GetAsync(userSearchParameters);
     }
 
     public async Task UpdateAsync(UserUpdateDTO userToUpdate)
     {
-        User? existing = UserDAO.GetByIdAsync(userToUpdate.Id).Result;
+        User? existing = _userDao.GetByIdAsync(userToUpdate.Id).Result;
         if (existing == null)
             throw new Exception($"User with ID {userToUpdate.Id} not found!");
         
         // Patchwork solution to prevent duplicate usernames
         // Should be a combined with .GetByIdAsync() to create a private method for checking both.
         // Problem has arisen due to me wanting both a unique username and a unique ID. 
-        User? existingUsername = await UserDAO.GetByUsernameAsync(userToUpdate.UserName);
+        User? existingUsername = await _userDao.GetByUsernameAsync(userToUpdate.UserName);
         if (existingUsername != null)
             throw new Exception("Username already taken!");
         // --------------------------------------------------
@@ -65,7 +65,7 @@ public class UserLogic : IUserLogic
             Password = passwordToUse,
         };
         
-        await UserDAO.UpdateAsync(updated);
+        await _userDao.UpdateAsync(updated);
     }
 
     private static void ValidateData(UserCreationDTO userToCreate)

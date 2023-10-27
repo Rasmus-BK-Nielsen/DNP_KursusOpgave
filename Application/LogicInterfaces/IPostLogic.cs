@@ -1,0 +1,9 @@
+using Shared.Domain;
+using Shared.DTOs;
+
+namespace Application.LogicInterfaces;
+
+public interface IPostLogic
+{
+    Task<Post> CreateAsync(PostCreationDTO dto);
+}

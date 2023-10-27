@@ -1,14 +1,7 @@
 namespace Shared.Domain;
 
-public class ForumPost
+public class Post
 {
-    public ForumPost(User postAuthor, string postTitle, string postBody)
-    {
-        PostAuthor = postAuthor;
-        PostTitle = postTitle;
-        PostBody = postBody;
-    }
-
     // I don't want user to be able to edit these:
     public User PostAuthor { get; }
     public string PostTitle { get; }
@@ -19,4 +12,11 @@ public class ForumPost
     // I want persistent-layer to assign these:
     public string PostDate { get; set; }
     public int PostId { get; set; }
+    
+    public Post(User postAuthor, string postTitle, string postBody)
+    {
+        PostAuthor = postAuthor;
+        PostTitle = postTitle;
+        PostBody = postBody;
+    }
 }

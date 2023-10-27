@@ -19,7 +19,7 @@ public class FileContext
         }
     }
     
-    public ICollection<ForumPost> ForumPosts
+    public ICollection<Post> ForumPosts
     {
         get
         {
@@ -36,7 +36,7 @@ public class FileContext
         {
             _dataContainer = new ()
             {
-                ForumPosts = new List<ForumPost>(),
+                ForumPosts = new List<Post>(),
                 Users = new List<User>()
             };
             return;
