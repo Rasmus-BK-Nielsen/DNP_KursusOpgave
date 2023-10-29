@@ -30,11 +30,10 @@ public class PostLogic : IPostLogic
         
         return created;
     }
-
-    // TODO: Implement this method
+    
     public Task<IEnumerable<Post>> GetAsync(PostSearchParametersDTO searchParameters)
     {
-        throw new NotImplementedException();
+        return _postDAO.GetAsync(searchParameters);
     }
 
     private void ValidatePost(PostCreationDTO dto)

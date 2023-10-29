@@ -34,6 +34,20 @@ public class PostFileDAO : IPostDAO
     // TODO: Implement this method
     public Task<IEnumerable<Post>> GetAsync(PostSearchParametersDTO searchParameters)
     {
-        throw new NotImplementedException();
+        IEnumerable<Post> result = _context.ForumPosts.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(searchParameters.UserName))
+        {
+            result = _context.ForumPosts.Where(post => 
+                post.PostAuthor.UserName.Equals(searchParameters.UserName, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        if (!string.IsNullOrEmpty(searchParameters.PostTitle))
+        {
+            result = _context.ForumPosts.Where(post => 
+                post.PostTitle.Equals(searchParameters.PostTitle, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        return Task.FromResult(result);
     }
 }
