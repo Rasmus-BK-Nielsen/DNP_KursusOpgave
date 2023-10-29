@@ -1,6 +1,7 @@
 using System.Globalization;
 using Application.DAOInterfaces;
 using Shared.Domain;
+using Shared.DTOs;
 
 namespace FileData.DAOs;
 
@@ -28,5 +29,11 @@ public class PostFileDAO : IPostDAO
         _context.SaveChanges();
         
         return Task.FromResult(post);
+    }
+
+    // TODO: Implement this method
+    public Task<IEnumerable<Post>> GetAsync(PostSearchParametersDTO searchParameters)
+    {
+        throw new NotImplementedException();
     }
 }

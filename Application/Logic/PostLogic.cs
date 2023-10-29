@@ -30,7 +30,13 @@ public class PostLogic : IPostLogic
         
         return created;
     }
-    
+
+    // TODO: Implement this method
+    public Task<IEnumerable<Post>> GetAsync(PostSearchParametersDTO searchParameters)
+    {
+        throw new NotImplementedException();
+    }
+
     private void ValidatePost(PostCreationDTO dto)
     {
         if (string.IsNullOrWhiteSpace(dto.PostTitle))

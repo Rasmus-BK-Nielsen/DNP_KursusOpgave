@@ -1,0 +1,48 @@
+{
+  "Users": [
+    {
+      "UserName": "Rasmus",
+      "Password": "123456789",
+      "Id": 2,
+      "SecurityLevel": 0
+    },
+    {
+      "UserName": "Nielsen",
+      "Password": "string",
+      "Id": 3,
+      "SecurityLevel": 0
+    },
+    {
+      "UserName": "Sumsar",
+      "Password": "1234",
+      "Id": 1,
+      "SecurityLevel": 0
+    }
+  ],
+  "ForumPosts": [
+    {
+      "PostAuthor": {
+        "UserName": "Rasmus",
+        "Password": "password",
+        "Id": 1,
+        "SecurityLevel": 1
+      },
+      "PostTitle": "Dette er en test Post.Title",
+      "PostBody": "Dette er en test Post.Body",
+      "PostDate": "10-27-2023 14:36",
+      "PostId": 1
+    },
+    {
+      "PostAuthor": {
+        "UserName": "Rasmus",
+        "Password": "password",
+        "Id": 1,
+        "SecurityLevel": 1
+      },
+      "PostTitle": "09876543210987654321098765432109876543210987654321",
+      "PostBody": "Hello",
+      "PostDate": "10-27-2023 14:37",
+      "PostId": 2
+    }
+  ]
+}
