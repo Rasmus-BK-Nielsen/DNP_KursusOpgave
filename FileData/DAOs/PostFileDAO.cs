@@ -50,4 +50,26 @@ public class PostFileDAO : IPostDAO
         
         return Task.FromResult(result);
     }
+
+    public Task UpdateAsync(Post postToUpdate)
+    {
+        Post? existing = _context.ForumPosts.FirstOrDefault(p => p.PostId == postToUpdate.PostId);
+        if (existing == null)
+        {
+            throw new Exception($"Post with ID {postToUpdate.PostId} not found!");
+        }
+        
+        _context.ForumPosts.Remove(existing);
+        _context.ForumPosts.Add(postToUpdate);
+        
+        _context.SaveChanges();
+
+        return Task.CompletedTask;
+    }
+
+    public Task<Post?> GetByIdAsync(int id)
+    {
+        Post? existing = _context.ForumPosts.FirstOrDefault(post => post.PostId == id);
+        return Task.FromResult(existing);
+    }
 }

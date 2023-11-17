@@ -23,9 +23,9 @@ public class PostLogic : IPostLogic
         {
             throw new Exception($"User with ID {dto.OwnerId} not found!");
         }
-
-        ValidatePost(dto);
+        
         Post post = new(user, dto.PostTitle, dto.PostBody);
+        ValidatePost(post);
         Post created = await _postDAO.CreateAsync(post);
         
         return created;
@@ -36,7 +36,39 @@ public class PostLogic : IPostLogic
         return _postDAO.GetAsync(searchParameters);
     }
 
-    private void ValidatePost(PostCreationDTO dto)
+    public async Task UpdateAsync(PostUpdateDTO post)
+    {
+        Post? existing = await _postDAO.GetByIdAsync(post.PostId);
+        
+        if (existing == null)
+        {
+            throw new Exception($"Post with ID {post.PostId} not found!");
+        }
+
+        User? user = null;
+        if (post.OwnerId != null)
+        {
+            user = await _userDAO.GetByIdAsync((int)post.OwnerId);
+            if (user == null)
+            {
+                throw new Exception($"User with ID {post.OwnerId} not found!");
+            }
+        }
+
+        User userToUse = user ?? existing.PostAuthor;
+        string titleToUse = post.PostTitle ?? existing.PostTitle;
+        string bodyToUse = post.PostBody ?? existing.PostBody;
+        
+        Post updated = new(userToUse, titleToUse, bodyToUse);
+        updated.PostId = existing.PostId;
+        updated.PostDate = existing.PostDate;
+        
+        ValidatePost(updated);
+        
+        await _postDAO.UpdateAsync(updated);
+    }
+
+    private void ValidatePost(Post dto)
     {
         if (string.IsNullOrWhiteSpace(dto.PostTitle))
             throw new Exception("Title cannot be empty");
