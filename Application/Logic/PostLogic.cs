@@ -68,6 +68,34 @@ public class PostLogic : IPostLogic
         await _postDAO.UpdateAsync(updated);
     }
 
+    public async Task DeleteAsync(int postId, int userId)
+    {
+        Post? post = await _postDAO.GetByIdAsync(postId);
+        if (post == null)
+        {
+            throw new Exception($"Post with ID {postId} not found!");
+        }
+        
+        if (post.PostAuthor.Id != userId)
+        {
+            throw new Exception($"User with ID {userId} is not the owner of post with ID {postId}!");
+        }
+        
+        await _postDAO.DeleteAsync(postId);
+    }
+
+    public async Task<PostBasicDTO> GetByIdAsync(int id)
+    {
+        Post? post = await _postDAO.GetByIdAsync(id);
+        if (post == null)
+        {
+            throw new Exception($"Post with ID {id} not found!");
+        }
+        
+        return new PostBasicDTO(post.PostId, post.PostAuthor.UserName, post.PostTitle);
+    }
+
+
     private void ValidatePost(Post dto)
     {
         if (string.IsNullOrWhiteSpace(dto.PostTitle))

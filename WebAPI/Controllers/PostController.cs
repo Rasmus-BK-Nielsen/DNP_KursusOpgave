@@ -48,12 +48,42 @@ public class PostController : ControllerBase
         }
     }
     
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<PostBasicDTO>> GetByIdAsync([FromRoute] int id)
+    {
+        try
+        {
+            PostBasicDTO post = await _postLogic.GetByIdAsync(id);
+            return Ok(post);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
     [HttpPatch]
     public async Task<ActionResult> UpdateAsync ([FromBody] PostUpdateDTO dto)
     {
         try
         {
             await _postLogic.UpdateAsync(dto);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpDelete("{postId}/{userId}")]
+    public async Task<ActionResult> DeleteAsync([FromRoute]int postId,[FromRoute] int userId)
+    {
+        try
+        {
+            await _postLogic.DeleteAsync(postId, userId);
             return Ok();
         }
         catch (Exception e)

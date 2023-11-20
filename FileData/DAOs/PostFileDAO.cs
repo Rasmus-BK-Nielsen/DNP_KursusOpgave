@@ -72,4 +72,18 @@ public class PostFileDAO : IPostDAO
         Post? existing = _context.ForumPosts.FirstOrDefault(post => post.PostId == id);
         return Task.FromResult(existing);
     }
+
+    public Task DeleteAsync(int id)
+    {
+        Post? post = _context.ForumPosts.FirstOrDefault(p => p.PostId == id);
+        if (post == null)
+        {
+            throw new Exception($"Post with ID {id} not found!");
+        }
+        
+        _context.ForumPosts.Remove(post);
+        _context.SaveChanges();
+        
+        return Task.CompletedTask;
+    }
 }
