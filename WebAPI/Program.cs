@@ -26,6 +26,16 @@ builder.Services.AddScoped<IPostLogic, PostLogic>();
 
 var app = builder.Build();
 
+// Disabling CORS (Tutorial page 5) ************************************************************************************
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowCredentials());
+// End of disabling CORS ***********************************************************************************************
+
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
